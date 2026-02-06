@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Counting Present</title>
+<link rel="stylesheet" href="counting-present.css">
+</head>
+<body>
+<div class="app">
+  <h1>Counting Present</h1>
+  <p class="subtitle">Keep track of your gifts</p>
+
+  <div class="counter-display">
+    <span id="count">0</span>
+    <span class="label">presents</span>
+  </div>
+
+  <div class="controls">
+    <button id="decrementBtn" class="btn btn-minus" title="Remove a present">-</button>
+    <button id="resetBtn" class="btn btn-reset" title="Reset count">Reset</button>
+    <button id="incrementBtn" class="btn btn-plus" title="Add a present">+</button>
+  </div>
+
+  <div class="present-list">
+    <h2>Present Log</h2>
+    <div class="add-present-form">
+      <input type="text" id="presentName" placeholder="Enter present name...">
+      <button id="addPresentBtn" class="btn btn-add">Add</button>
+    </div>
+    <ul id="presentList"></ul>
+    <p id="emptyMessage" class="empty-message">No presents logged yet.</p>
+  </div>
+</div>
+
+<script type="text/javascript" src="counting-present.js"></script>
+</body>
+</html>
