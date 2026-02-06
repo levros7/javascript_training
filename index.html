@@ -2,9 +2,339 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>loops</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Counting Present</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.app {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #718096;
+  margin-bottom: 32px;
+}
+
+.counter-display {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.counter-display #count {
+  display: block;
+  font-size: 4rem;
+  font-weight: bold;
+  color: #2b6cb0;
+  line-height: 1.1;
+}
+
+.counter-display .label {
+  display: block;
+  font-size: 1.1rem;
+  color: #a0aec0;
+  margin-top: 4px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 12px 24px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-plus {
+  background-color: #48bb78;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 12px 28px;
+}
+
+.btn-plus:hover {
+  background-color: #38a169;
+}
+
+.btn-minus {
+  background-color: #fc8181;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 12px 28px;
+}
+
+.btn-minus:hover {
+  background-color: #e53e3e;
+}
+
+.btn-reset {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.btn-reset:hover {
+  background-color: #cbd5e0;
+}
+
+.present-list {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.present-list h2 {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.add-present-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.add-present-form input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.add-present-form input:focus {
+  border-color: #2b6cb0;
+}
+
+.btn-add {
+  background-color: #2b6cb0;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.btn-add:hover {
+  background-color: #2c5282;
+}
+
+#presentList {
+  list-style: none;
+}
+
+#presentList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+#presentList li:last-child {
+  border-bottom: none;
+}
+
+#presentList li span {
+  font-size: 1rem;
+  color: #4a5568;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.btn-remove:hover {
+  background-color: #fed7d7;
+}
+
+.empty-message {
+  text-align: center;
+  color: #a0aec0;
+  font-style: italic;
+  padding: 12px 0;
+}
+</style>
 </head>
 <body>
-<script type="text/javascript" src="loops.js"></script>
+<div class="app">
+  <h1>Counting Present</h1>
+  <p class="subtitle">Keep track of your gifts</p>
+
+  <div class="counter-display">
+    <span id="count">0</span>
+    <span class="label">presents</span>
+  </div>
+
+  <div class="controls">
+    <button id="decrementBtn" class="btn btn-minus" title="Remove a present">-</button>
+    <button id="resetBtn" class="btn btn-reset" title="Reset count">Reset</button>
+    <button id="incrementBtn" class="btn btn-plus" title="Add a present">+</button>
+  </div>
+
+  <div class="present-list">
+    <h2>Present Log</h2>
+    <div class="add-present-form">
+      <input type="text" id="presentName" placeholder="Enter present name...">
+      <button id="addPresentBtn" class="btn btn-add">Add</button>
+    </div>
+    <ul id="presentList"></ul>
+    <p id="emptyMessage" class="empty-message">No presents logged yet.</p>
+  </div>
+</div>
+
+<script type="text/javascript">
+(function () {
+  var count = 0;
+  var presents = [];
+
+  var countDisplay = document.getElementById("count");
+  var presentNameInput = document.getElementById("presentName");
+  var presentListEl = document.getElementById("presentList");
+  var emptyMessage = document.getElementById("emptyMessage");
+  var incrementBtn = document.getElementById("incrementBtn");
+  var decrementBtn = document.getElementById("decrementBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var addPresentBtn = document.getElementById("addPresentBtn");
+
+  function updateCountDisplay() {
+    countDisplay.textContent = count;
+  }
+
+  function renderPresentList() {
+    presentListEl.innerHTML = "";
+
+    if (presents.length === 0) {
+      emptyMessage.style.display = "block";
+      return;
+    }
+
+    emptyMessage.style.display = "none";
+
+    for (var i = 0; i < presents.length; i++) {
+      var li = document.createElement("li");
+
+      var nameSpan = document.createElement("span");
+      nameSpan.textContent = (i + 1) + ". " + presents[i];
+      li.appendChild(nameSpan);
+
+      var removeBtn = document.createElement("button");
+      removeBtn.textContent = "x";
+      removeBtn.className = "btn-remove";
+      removeBtn.setAttribute("data-index", i);
+      li.appendChild(removeBtn);
+
+      presentListEl.appendChild(li);
+    }
+  }
+
+  function addPresent(name) {
+    presents.push(name);
+    count = presents.length;
+    updateCountDisplay();
+    renderPresentList();
+  }
+
+  function removePresent(index) {
+    presents.splice(index, 1);
+    count = presents.length;
+    updateCountDisplay();
+    renderPresentList();
+  }
+
+  incrementBtn.addEventListener("click", function () {
+    count++;
+    updateCountDisplay();
+  });
+
+  decrementBtn.addEventListener("click", function () {
+    if (count > 0) {
+      count--;
+      updateCountDisplay();
+    }
+  });
+
+  resetBtn.addEventListener("click", function () {
+    count = 0;
+    presents = [];
+    updateCountDisplay();
+    renderPresentList();
+  });
+
+  addPresentBtn.addEventListener("click", function () {
+    var name = presentNameInput.value.trim();
+    if (name !== "") {
+      addPresent(name);
+      presentNameInput.value = "";
+      presentNameInput.focus();
+    }
+  });
+
+  presentNameInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      var name = presentNameInput.value.trim();
+      if (name !== "") {
+        addPresent(name);
+        presentNameInput.value = "";
+      }
+    }
+  });
+
+  presentListEl.addEventListener("click", function (e) {
+    if (e.target.className === "btn-remove") {
+      var index = parseInt(e.target.getAttribute("data-index"), 10);
+      removePresent(index);
+    }
+  });
+
+  updateCountDisplay();
+  renderPresentList();
+})();
+</script>
 </body>
 </html>
